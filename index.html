@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Space+Grotesk:wght@400;500;700&family=Caveat:wght@600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Bebas+Neue&family=Archivo:wght@500;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   :root{
     --page-bg:#f2efe9;
@@ -69,6 +70,24 @@
     border-color:var(--accent);
     background:#fff;
   }
+  .logo-field{display:flex;align-items:center;gap:12px;}
+  .logo-field input[type=file]{
+    font-family:inherit;
+    font-size:12.5px;
+    color:var(--muted);
+    max-width:100%;
+  }
+  .logo-preview{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background-color:#fbfaf7;
+    border:1px dashed var(--line);
+    background-size:cover;
+    background-position:center;
+    flex-shrink:0;
+  }
+  .field .hint{font-size:11.5px;color:var(--muted);font-weight:400;}
   form.card-form button{
     grid-column:1/-1;
     justify-self:start;
@@ -273,6 +292,46 @@
   .d10-back .icon{fill:#ff8a5b;}
   .d10-back .site{color:#ff8a5b;}
 
+  /* ---- shared photo (circle) + QR (square) mark, added to every back ---- */
+  .brand-mark{
+    position:absolute;
+    right:5mm;
+    bottom:4mm;
+    display:flex;
+    align-items:flex-end;
+    gap:1.8mm;
+    z-index:5;
+  }
+  .brand-photo{
+    width:10.5mm;
+    height:10.5mm;
+    border-radius:50%;
+    object-fit:cover;
+    background:#fff;
+    border:0.35mm solid rgba(255,255,255,.92);
+    flex-shrink:0;
+    display:block;
+  }
+  .brand-photo.initials{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Inter',sans-serif;
+    font-size:8px;
+    font-weight:700;
+    color:#333;
+  }
+  .brand-qr{
+    width:10.5mm;
+    height:10.5mm;
+    background:#fff;
+    padding:0.7mm;
+    box-sizing:border-box;
+    border-radius:0.8mm;
+    flex-shrink:0;
+  }
+  .brand-qr img{width:100%;height:100%;display:block;}
+
   footer{margin-top:40px;color:var(--muted);font-size:12.5px;text-align:center;}
 </style>
 </head>
@@ -302,8 +361,15 @@
       <input id="email" type="email" placeholder="e.g. hello@yourbusiness.com" required>
     </div>
     <div class="field">
-      <label for="website">Website</label>
-      <input id="website" type="text" placeholder="e.g. www.yourbusiness.com">
+      <label for="website">Website <span class="hint">— generates the QR code on your card</span></label>
+      <input id="website" type="text" placeholder="e.g. https://sub.yourbusiness.vercel.app" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="logoUpload">Logo / photo <span class="hint">— shown in the circle on your card</span></label>
+      <div class="logo-field">
+        <input id="logoUpload" type="file" accept="image/*">
+        <div id="logoPreview" class="logo-preview" aria-hidden="true"></div>
+      </div>
     </div>
     <div class="field">
       <label for="address">Address (optional)</label>
@@ -355,6 +421,71 @@ function contactBlock(data, opts){
   return rows;
 }
 
+// ---- website autofill: prepends https://, leaves subdomains / *.vercel.app etc untouched ----
+function normalizeUrl(raw){
+  let v = (raw || "").trim();
+  if(!v) return "";
+  v = v.replace(/^\/+/, "");
+  if(!/^https?:\/\//i.test(v)) v = "https://" + v;
+  return v;
+}
+
+const websiteInput = document.getElementById('website');
+websiteInput.addEventListener('focus', () => {
+  if(!websiteInput.value.trim()) websiteInput.value = "https://";
+});
+websiteInput.addEventListener('blur', () => {
+  const v = websiteInput.value.trim();
+  websiteInput.value = (v === "https://") ? "" : normalizeUrl(v);
+});
+
+// ---- logo upload: stored as a data URL and shown as a circular preview ----
+let uploadedLogoDataUrl = "";
+document.getElementById('logoUpload').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  const preview = document.getElementById('logoPreview');
+  if(!file){ uploadedLogoDataUrl = ""; preview.style.backgroundImage = ""; return; }
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    uploadedLogoDataUrl = ev.target.result;
+    preview.style.backgroundImage = `url("${uploadedLogoDataUrl}")`;
+  };
+  reader.readAsDataURL(file);
+});
+
+// ---- QR code: rendered off-screen, then read back out as a PNG data URL ----
+function generateQrDataUrl(text, size, callback){
+  if(!text){ callback(""); return; }
+  const holder = document.createElement('div');
+  holder.style.position = "fixed";
+  holder.style.left = "-9999px";
+  document.body.appendChild(holder);
+  new QRCode(holder, {
+    text: text,
+    width: size,
+    height: size,
+    correctLevel: QRCode.CorrectLevel.M
+  });
+  setTimeout(() => {
+    const canvas = holder.querySelector('canvas');
+    const img = holder.querySelector('img');
+    const dataUrl = canvas ? canvas.toDataURL('image/png') : (img ? img.src : "");
+    document.body.removeChild(holder);
+    callback(dataUrl);
+  }, 60);
+}
+
+// ---- shared circle (photo) + square (QR) mark added to every card back ----
+function brandMarkHtml(data){
+  const photoHtml = data.logoDataUrl
+    ? `<img class="brand-photo" src="${data.logoDataUrl}" alt="">`
+    : `<div class="brand-photo initials">${escapeHtml(initials(data.bizName))}</div>`;
+  const qrHtml = data.qrDataUrl
+    ? `<div class="brand-qr"><img src="${data.qrDataUrl}" alt="QR code"></div>`
+    : "";
+  return `<div class="brand-mark">${photoHtml}${qrHtml}</div>`;
+}
+
 const DESIGNS = [
   { id:1, name:"Swiss Minimal", desc:"Clean type, one accent rule, high contrast back.",
     front:(d)=>`<div class="rule"></div><div class="name">${escapeHtml(d.bizName)}</div>
@@ -391,7 +522,12 @@ const DESIGNS = [
     back:(d)=>contactBlock(d,{siteClass:'site'}) },
 
   { id:9, name:"Luxury Gold & Black", desc:"Monogram-led design for premium, high-end positioning.",
-    front:(d)=>`<div class="mono">${escapeHtml(initials(d.bizName))}</div><div class="name">${escapeHtml(d.bizName)}</div><div class="tag">${escapeHtml(truncate(d.about,52))}</div>`,
+    front:(d)=>{
+      const monoContent = d.logoDataUrl
+        ? `<img src="${d.logoDataUrl}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`
+        : escapeHtml(initials(d.bizName));
+      return `<div class="mono">${monoContent}</div><div class="name">${escapeHtml(d.bizName)}</div><div class="tag">${escapeHtml(truncate(d.about,52))}</div>`;
+    },
     back:(d)=>contactBlock(d,{siteClass:'site'}) },
 
   { id:10, name:"Retro Sunset", desc:"Warm gradient with a playful retro sun motif.",
@@ -422,7 +558,7 @@ function buildResults(data){
         </div>
         <div class="card-slot">
           <span class="slot-label">Back</span>
-          <div id="${backId}" class="biz-card d${design.id}-back">${design.back(data)}</div>
+          <div id="${backId}" class="biz-card d${design.id}-back">${design.back(data)}${brandMarkHtml(data)}</div>
         </div>
       </div>
       <div class="actions">
@@ -438,17 +574,25 @@ function buildResults(data){
 
 document.getElementById('cardForm').addEventListener('submit', (e)=>{
   e.preventDefault();
+  const website = normalizeUrl(document.getElementById('website').value.trim());
+  document.getElementById('website').value = website;
+
   const data = {
     bizName: document.getElementById('bizName').value.trim(),
     ownerName: document.getElementById('ownerName').value.trim(),
     phone: document.getElementById('phone').value.trim(),
     email: document.getElementById('email').value.trim(),
-    website: document.getElementById('website').value.trim(),
+    website: website,
     address: document.getElementById('address').value.trim(),
     about: document.getElementById('about').value.trim(),
+    logoDataUrl: uploadedLogoDataUrl,
   };
-  buildResults(data);
-  document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'});
+
+  generateQrDataUrl(website, 240, (qrDataUrl) => {
+    data.qrDataUrl = qrDataUrl;
+    buildResults(data);
+    document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'});
+  });
 });
 
 // 88mm x 55mm at 300dpi => ~1039 x 649 px
