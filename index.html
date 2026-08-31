@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Card Studio — 10 Designs, Front &amp; Back</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Space+Grotesk:wght@400;500;700&family=Caveat:wght@600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Bebas+Neue&family=Archivo:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root{
+    --page-bg:#f2efe9;
+    --ink:#1c1a17;
+    --muted:#736b60;
+    --accent:#b5482f;
+    --panel:#ffffff;
+    --line:#e3ddd2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--page-bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    padding:32px 16px 80px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;}
+  header.intro{margin-bottom:28px;}
+  header.intro h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(28px,5vw,40px);
+    margin:0 0 8px;
+    letter-spacing:-0.01em;
+  }
+  header.intro p{
+    color:var(--muted);
+    max-width:60ch;
+    line-height:1.55;
+    margin:0;
+    font-size:15px;
+  }
+
+  /* ---- form ---- */
+  form.card-form{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:24px;
+    margin:28px 0 44px;
+    display:grid;
+    gap:16px;
+    grid-template-columns:1fr 1fr;
+  }
+  form.card-form .full{grid-column:1/-1;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field label{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.01em;}
+  .field input, .field textarea{
+    font-family:inherit;
+    font-size:14.5px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#fbfaf7;
+    color:var(--ink);
+    resize:vertical;
+  }
+  .field input:focus, .field textarea:focus{
+    outline:none;
+    border-color:var(--accent);
+    background:#fff;
+  }
+  form.card-form button{
+    grid-column:1/-1;
+    justify-self:start;
+    background:var(--ink);
+    color:#fff;
+    border:none;
+    font-family:inherit;
+    font-weight:600;
+    font-size:14.5px;
+    padding:12px 22px;
+    border-radius:9px;
+    cursor:pointer;
+    transition:transform .1s ease, background .15s ease;
+  }
+  form.card-form button:hover{background:var(--accent);}
+  form.card-form button:active{transform:scale(.98);}
+  @media (max-width:640px){
+    form.card-form{grid-template-columns:1fr;}
+  }
+
+  #results{display:none;}
+  #results.show{display:block;}
+
+  .design-block{
+    margin-bottom:52px;
+    padding-bottom:40px;
+    border-bottom:1px solid var(--line);
+  }
+  .design-block:last-child{border-bottom:none;}
+  .design-title{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .design-title .num{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .design-title h2{
+    font-size:18px;
+    margin:0;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  .design-title p{margin:0 0 0 4px;color:var(--muted);font-size:13px;}
+
+  .card-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:24px;
+    align-items:flex-start;
+  }
+  .card-slot{display:flex;flex-direction:column;gap:8px;align-items:flex-start;}
+  .card-slot .slot-label{font-size:11.5px;color:var(--muted);font-weight:600;text-transform:none;}
+  .actions{display:flex;gap:20px;margin-top:8px;flex-wrap:wrap;}
+  .actions button{
+    background:none;
+    border:1px solid var(--line);
+    color:var(--ink);
+    font-family:inherit;
+    font-size:12.5px;
+    padding:8px 14px;
+    border-radius:7px;
+    cursor:pointer;
+  }
+  .actions button:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* ---- card base ---- */
+  .biz-card{
+    width:88mm;
+    height:55mm;
+    position:relative;
+    overflow:hidden;
+    border-radius:2.5mm;
+    box-shadow:0 6px 18px rgba(0,0,0,.14);
+    flex-shrink:0;
+  }
+  .biz-card *{box-sizing:border-box;}
+  .icon{width:9px;height:9px;display:inline-block;vertical-align:middle;margin-right:6px;flex-shrink:0;}
+  .contact-row{display:flex;align-items:center;gap:0;font-size:6.4px;line-height:1.3;}
+
+  /* =========================================================
+     DESIGN 1 — Swiss Minimal
+  ========================================================= */
+  .d1-front{background:#ffffff;color:#141414;font-family:'Inter',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:space-between;}
+  .d1-front .rule{width:9mm;height:1.6mm;background:#c8382a;margin-bottom:3mm;}
+  .d1-front .name{font-size:16px;font-weight:800;letter-spacing:-0.02em;line-height:1.1;}
+  .d1-front .tag{font-size:8.5px;color:#6b6b6b;margin-top:2mm;max-width:70mm;line-height:1.4;}
+  .d1-front .foot{font-size:7px;color:#a3a3a3;letter-spacing:.04em;}
+  .d1-back{background:#141414;color:#fff;font-family:'Inter',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;gap:2.6mm;}
+  .d1-back .contact-row{color:#f4f4f4;font-size:7px;}
+  .d1-back .icon{fill:#c8382a;}
+  .d1-back .site{color:#c8382a;font-weight:600;}
+
+  /* =========================================================
+     DESIGN 2 — Bold Geometric
+  ========================================================= */
+  .d2-front{background:#12234b;color:#fff;font-family:'Poppins',sans-serif;position:relative;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:flex-end;}
+  .d2-front::before{content:"";position:absolute;top:-14mm;right:-16mm;width:40mm;height:40mm;background:#e0a834;transform:rotate(20deg);}
+  .d2-front::after{content:"";position:absolute;top:-10mm;right:-10mm;width:40mm;height:40mm;background:#12234b;transform:rotate(20deg);}
+  .d2-front .name{position:relative;font-size:15px;font-weight:800;line-height:1.15;z-index:2;}
+  .d2-front .tag{position:relative;font-size:8px;color:#c9d2ea;margin-top:2mm;z-index:2;max-width:60mm;}
+  .d2-back{background:#e0a834;color:#12234b;font-family:'Poppins',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;gap:2.6mm;}
+  .d2-back .contact-row{font-size:7px;font-weight:600;}
+  .d2-back .icon{fill:#12234b;}
+  .d2-back .monogram{position:absolute;bottom:5mm;right:6mm;font-size:20px;font-weight:800;opacity:.25;}
+
+  /* =========================================================
+     DESIGN 3 — Elegant Serif
+  ========================================================= */
+  .d3-front{background:#f6f1e6;color:#26362c;font-family:'Playfair Display',serif;padding:7mm 6mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2mm;border:0.6mm solid #26362c;}
+  .d3-front .name{font-size:15px;font-weight:700;letter-spacing:.02em;}
+  .d3-front .div{width:14mm;height:0.4mm;background:#a98a4a;}
+  .d3-front .tag{font-size:7.6px;font-style:italic;color:#5b6b5f;max-width:66mm;}
+  .d3-back{background:#26362c;color:#f6f1e6;font-family:'Playfair Display',serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;gap:2.8mm;}
+  .d3-back .contact-row{font-size:7px;font-family:'Inter',sans-serif;}
+  .d3-back .icon{fill:#a98a4a;}
+  .d3-back .site{color:#a98a4a;}
+
+  /* =========================================================
+     DESIGN 4 — Tech Gradient
+  ========================================================= */
+  .d4-front{background:linear-gradient(135deg,#1c1033,#2c1b57 45%,#3d2472);color:#fff;font-family:'Space Grotesk',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:space-between;}
+  .d4-front .name{font-size:15px;font-weight:700;}
+  .d4-front .tag{font-size:8px;color:#c9b8f5;max-width:66mm;margin-top:2mm;}
+  .d4-front .tick{font-family:'Space Grotesk',monospace;font-size:6.4px;color:#8f79c9;letter-spacing:.06em;}
+  .d4-back{background:#100a1f;color:#fff;font-family:'Space Grotesk',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;gap:2.6mm;}
+  .d4-back .contact-row{font-size:6.8px;font-family:monospace,'Space Grotesk';}
+  .d4-back .icon{fill:#9d7cf0;}
+  .d4-back .site{color:#9d7cf0;}
+
+  /* =========================================================
+     DESIGN 5 — Handwritten Creative
+  ========================================================= */
+  .d5-front{background:#fbe9dd;color:#7a3b2e;font-family:'Inter',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;gap:1.5mm;position:relative;}
+  .d5-front .name{font-family:'Caveat',cursive;font-size:24px;font-weight:700;line-height:1;color:#c1553a;}
+  .d5-front .tag{font-size:8px;color:#8a5a49;max-width:68mm;}
+  .d5-front .dot{position:absolute;bottom:5mm;right:6mm;width:10mm;height:10mm;border-radius:50%;background:#f2b6a0;opacity:.8;}
+  .d5-back{background:#c1553a;color:#fff2ea;font-family:'Inter',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;gap:2.6mm;}
+  .d5-back .contact-row{font-size:7px;}
+  .d5-back .icon{fill:#fbe9dd;}
+
+  /* =========================================================
+     DESIGN 6 — Corporate Blue
+  ========================================================= */
+  .d6-front{background:#ffffff;color:#0f2647;font-family:'Inter',sans-serif;padding:0;display:flex;height:100%;}
+  .d6-front .side{width:28mm;background:#0f2647;flex-shrink:0;}
+  .d6-front .main{padding:7mm 5mm;display:flex;flex-direction:column;justify-content:center;gap:2mm;}
+  .d6-front .name{font-size:13.5px;font-weight:700;}
+  .d6-front .tag{font-size:7.5px;color:#5b6d84;max-width:52mm;}
+  .d6-back{background:#0f2647;color:#fff;font-family:'Inter',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;gap:2.6mm;}
+  .d6-back .contact-row{font-size:7px;}
+  .d6-back .icon{fill:#7fa4d6;}
+  .d6-back .site{color:#7fa4d6;font-weight:600;}
+
+  /* =========================================================
+     DESIGN 7 — Organic Kraft
+  ========================================================= */
+  .d7-front{background:#cdb896;background-image:radial-gradient(rgba(0,0,0,.05) 1px,transparent 1px);background-size:3px 3px;color:#3a3122;font-family:'Archivo',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;gap:2mm;}
+  .d7-front .name{font-size:14px;font-weight:800;}
+  .d7-front .tag{font-size:7.6px;color:#5a4f39;max-width:68mm;}
+  .d7-front .leaf{position:absolute;width:6mm;height:6mm;}
+  .d7-back{background:#3a3122;color:#e9dfc7;font-family:'Archivo',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;gap:2.6mm;}
+  .d7-back .contact-row{font-size:7px;}
+  .d7-back .icon{fill:#a9c197;}
+  .d7-back .site{color:#a9c197;}
+
+  /* =========================================================
+     DESIGN 8 — Neon Nightlife
+  ========================================================= */
+  .d8-front{background:#0a0a0d;color:#fff;font-family:'Bebas Neue',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
+  .d8-front .name{font-size:22px;letter-spacing:.03em;color:#ff2e8a;text-shadow:0 0 6px rgba(255,46,138,.7);line-height:1;}
+  .d8-front .tag{font-family:'Inter',sans-serif;font-size:7.5px;color:#66e3ff;margin-top:2mm;letter-spacing:.03em;max-width:66mm;}
+  .d8-front .glow{position:absolute;bottom:-10mm;right:-10mm;width:30mm;height:30mm;border-radius:50%;background:#00e0ff;opacity:.18;filter:blur(6px);}
+  .d8-back{background:#0a0a0d;color:#fff;font-family:'Inter',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;gap:2.6mm;}
+  .d8-back .contact-row{font-size:7px;color:#e9e9ff;}
+  .d8-back .icon{fill:#00e0ff;}
+  .d8-back .site{color:#00e0ff;}
+
+  /* =========================================================
+     DESIGN 9 — Luxury Gold & Black
+  ========================================================= */
+  .d9-front{background:#0c0c0c;color:#e9d6a3;font-family:'Cormorant Garamond',serif;padding:6mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:0.5mm solid #b8963f;gap:1.6mm;}
+  .d9-front .mono{width:11mm;height:11mm;border:0.4mm solid #b8963f;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;margin-bottom:1mm;}
+  .d9-front .name{font-size:14px;font-weight:600;letter-spacing:.04em;}
+  .d9-front .tag{font-size:7.4px;color:#a99562;font-style:italic;max-width:66mm;}
+  .d9-back{background:#0c0c0c;color:#e9d6a3;font-family:'Cormorant Garamond',serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;gap:2.8mm;border:0.5mm solid #b8963f;}
+  .d9-back .contact-row{font-size:7.6px;font-family:'Inter',sans-serif;}
+  .d9-back .icon{fill:#b8963f;}
+  .d9-back .site{color:#b8963f;}
+
+  /* =========================================================
+     DESIGN 10 — Retro Sunset
+  ========================================================= */
+  .d10-front{background:linear-gradient(180deg,#ff8a5b,#f24e6b 60%,#c62368);color:#fff2e6;font-family:'Archivo',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;}
+  .d10-front .sun{position:absolute;top:-8mm;left:6mm;width:20mm;height:20mm;border-radius:50%;background:#ffd76b;opacity:.9;}
+  .d10-front .name{position:relative;font-size:15px;font-weight:800;z-index:2;}
+  .d10-front .tag{position:relative;font-size:7.8px;z-index:2;max-width:66mm;margin-top:1.5mm;}
+  .d10-back{background:#2a1a2e;color:#ffe3c2;font-family:'Archivo',sans-serif;padding:7mm 6mm;display:flex;flex-direction:column;justify-content:center;gap:2.6mm;}
+  .d10-back .contact-row{font-size:7px;}
+  .d10-back .icon{fill:#ff8a5b;}
+  .d10-back .site{color:#ff8a5b;}
+
+  footer{margin-top:40px;color:var(--muted);font-size:12.5px;text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="intro">
+    <h1>Business Card Studio</h1>
+    <p>Enter your details once and get 10 fully designed card sets — front and back, each printed to the standard 88mm × 55mm size. Download any card as a print-ready PNG or send it straight to your printer.</p>
+  </header>
+
+  <form class="card-form" id="cardForm">
+    <div class="field">
+      <label for="bizName">Business name</label>
+      <input id="bizName" type="text" placeholder="e.g. Marlowe & Finch Studio" required>
+    </div>
+    <div class="field">
+      <label for="ownerName">Your name / title (optional)</label>
+      <input id="ownerName" type="text" placeholder="e.g. Aditi Rao, Founder">
+    </div>
+    <div class="field">
+      <label for="phone">Phone number</label>
+      <input id="phone" type="text" placeholder="e.g. +91 98765 43210" required>
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="e.g. hello@yourbusiness.com" required>
+    </div>
+    <div class="field">
+      <label for="website">Website</label>
+      <input id="website" type="text" placeholder="e.g. www.yourbusiness.com">
+    </div>
+    <div class="field">
+      <label for="address">Address (optional)</label>
+      <input id="address" type="text" placeholder="e.g. Bandra West, Mumbai">
+    </div>
+    <div class="field full">
+      <label for="about">What does your business do?</label>
+      <textarea id="about" rows="2" placeholder="e.g. We design and print custom furniture for small homes and studios." required></textarea>
+    </div>
+    <button type="submit">Generate 10 card designs</button>
+  </form>
+
+  <div id="results"></div>
+
+  <footer>Cards render at true 88mm × 55mm size. For best print results, use "Print this design" and print at 100% scale / actual size, with no page margins.</footer>
+</div>
+
+<script>
+function escapeHtml(str){
+  return (str || "").replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+function truncate(str, n){
+  if(!str) return "";
+  return str.length > n ? str.slice(0, n - 1).trim() + "…" : str;
+}
+function initials(name){
+  if(!name) return "";
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  return parts.slice(0,2).map(p => p[0].toUpperCase()).join("");
+}
+
+const ICONS = {
+  phone: '<svg class="icon" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.5 21 3 13.5 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z"/></svg>',
+  mail: '<svg class="icon" viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1.7 2 7.3 5.8L19.3 7H4.7zM4 8.2V18h16V8.2l-8 6.3-8-6.3z"/></svg>',
+  globe: '<svg class="icon" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 8h-3a15 15 0 0 0-1.2-4.9A8 8 0 0 1 18.9 10zM12 4c.8 1.2 1.6 3.1 1.9 6h-3.8c.3-2.9 1.1-4.8 1.9-6zm-3.7.1A15 15 0 0 0 7.1 10h-3a8 8 0 0 1 4.2-5.9zM4.1 12h3a15 15 0 0 0 1.2 4.9A8 8 0 0 1 4.1 12zM12 20c-.8-1.2-1.6-3.1-1.9-6h3.8c-.3 2.9-1.1 4.8-1.9 6zm3.7-.1a15 15 0 0 0 1.2-4.9h3a8 8 0 0 1-4.2 5.9z"/></svg>',
+  pin: '<svg class="icon" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>'
+};
+
+function contactBlock(data, opts){
+  opts = opts || {};
+  const site = data.website ? `<span class="${opts.siteClass||''}">${escapeHtml(data.website)}</span>` : '';
+  let rows = `
+    <div class="contact-row">${ICONS.phone}${escapeHtml(data.phone)}</div>
+    <div class="contact-row">${ICONS.mail}${escapeHtml(data.email)}</div>`;
+  if(data.website) rows += `<div class="contact-row">${ICONS.globe}${site}</div>`;
+  if(data.address) rows += `<div class="contact-row">${ICONS.pin}${escapeHtml(data.address)}</div>`;
+  return rows;
+}
+
+const DESIGNS = [
+  { id:1, name:"Swiss Minimal", desc:"Clean type, one accent rule, high contrast back.",
+    front:(d)=>`<div class="rule"></div><div class="name">${escapeHtml(d.bizName)}</div>
+      <div class="tag">${escapeHtml(truncate(d.about,72))}</div>
+      <div class="foot">${escapeHtml(d.ownerName||'')}</div>`,
+    back:(d)=>contactBlock(d,{siteClass:'site'}) },
+
+  { id:2, name:"Bold Geometric", desc:"Angled color block with a confident sans.",
+    front:(d)=>`<div class="name">${escapeHtml(d.bizName)}</div><div class="tag">${escapeHtml(truncate(d.about,60))}</div>`,
+    back:(d)=>contactBlock(d)+`<div class="monogram">${escapeHtml(initials(d.bizName))}</div>` },
+
+  { id:3, name:"Elegant Serif", desc:"Framed serif type for a refined, established feel.",
+    front:(d)=>`<div class="name">${escapeHtml(d.bizName)}</div><div class="div"></div><div class="tag">${escapeHtml(truncate(d.about,58))}</div>`,
+    back:(d)=>contactBlock(d,{siteClass:'site'}) },
+
+  { id:4, name:"Tech Gradient", desc:"Deep violet gradient with a monospaced contact set.",
+    front:(d)=>`<div class="name">${escapeHtml(d.bizName)}</div><div class="tag">${escapeHtml(truncate(d.about,64))}</div><div class="tick">${escapeHtml(d.ownerName||'')}</div>`,
+    back:(d)=>contactBlock(d,{siteClass:'site'}) },
+
+  { id:5, name:"Handwritten Creative", desc:"Warm, personal script name over a soft blush palette.",
+    front:(d)=>`<div class="name">${escapeHtml(d.bizName)}</div><div class="tag">${escapeHtml(truncate(d.about,66))}</div><div class="dot"></div>`,
+    back:(d)=>contactBlock(d) },
+
+  { id:6, name:"Corporate Blue", desc:"Split-panel layout that reads as trustworthy and formal.",
+    front:(d)=>`<div class="side"></div><div class="main"><div class="name">${escapeHtml(d.bizName)}</div><div class="tag">${escapeHtml(truncate(d.about,50))}</div></div>`,
+    back:(d)=>contactBlock(d,{siteClass:'site'}) },
+
+  { id:7, name:"Organic Kraft", desc:"Textured kraft tone suited to eco or handmade goods.",
+    front:(d)=>`<div class="name">${escapeHtml(d.bizName)}</div><div class="tag">${escapeHtml(truncate(d.about,64))}</div>`,
+    back:(d)=>contactBlock(d,{siteClass:'site'}) },
+
+  { id:8, name:"Neon Nightlife", desc:"High-energy dark card for entertainment or nightlife brands.",
+    front:(d)=>`<div class="name">${escapeHtml(d.bizName)}</div><div class="tag">${escapeHtml(truncate(d.about,60))}</div><div class="glow"></div>`,
+    back:(d)=>contactBlock(d,{siteClass:'site'}) },
+
+  { id:9, name:"Luxury Gold & Black", desc:"Monogram-led design for premium, high-end positioning.",
+    front:(d)=>`<div class="mono">${escapeHtml(initials(d.bizName))}</div><div class="name">${escapeHtml(d.bizName)}</div><div class="tag">${escapeHtml(truncate(d.about,52))}</div>`,
+    back:(d)=>contactBlock(d,{siteClass:'site'}) },
+
+  { id:10, name:"Retro Sunset", desc:"Warm gradient with a playful retro sun motif.",
+    front:(d)=>`<div class="sun"></div><div class="name">${escapeHtml(d.bizName)}</div><div class="tag">${escapeHtml(truncate(d.about,60))}</div>`,
+    back:(d)=>contactBlock(d,{siteClass:'site'}) },
+];
+
+function buildResults(data){
+  const container = document.getElementById('results');
+  container.innerHTML = '';
+  DESIGNS.forEach(design => {
+    const block = document.createElement('div');
+    block.className = 'design-block';
+
+    const frontId = `card-${design.id}-front`;
+    const backId = `card-${design.id}-back`;
+
+    block.innerHTML = `
+      <div class="design-title">
+        <span class="num">${String(design.id).padStart(2,'0')}</span>
+        <h2>${design.name}</h2>
+        <p>— ${design.desc}</p>
+      </div>
+      <div class="card-row">
+        <div class="card-slot">
+          <span class="slot-label">Front</span>
+          <div id="${frontId}" class="biz-card d${design.id}-front">${design.front(data)}</div>
+        </div>
+        <div class="card-slot">
+          <span class="slot-label">Back</span>
+          <div id="${backId}" class="biz-card d${design.id}-back">${design.back(data)}</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button data-action="png" data-target="${frontId}" data-name="${design.name}-front">Download front PNG</button>
+        <button data-action="png" data-target="${backId}" data-name="${design.name}-back">Download back PNG</button>
+        <button data-action="print" data-front="${frontId}" data-back="${backId}" data-name="${design.name}">Print this design</button>
+      </div>
+    `;
+    container.appendChild(block);
+  });
+  container.classList.add('show');
+}
+
+document.getElementById('cardForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const data = {
+    bizName: document.getElementById('bizName').value.trim(),
+    ownerName: document.getElementById('ownerName').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    website: document.getElementById('website').value.trim(),
+    address: document.getElementById('address').value.trim(),
+    about: document.getElementById('about').value.trim(),
+  };
+  buildResults(data);
+  document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+// 88mm x 55mm at 300dpi => ~1039 x 649 px
+const PX_W = Math.round(88/25.4*300);
+const PX_H = Math.round(55/25.4*300);
+
+document.getElementById('results').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  const action = btn.dataset.action;
+
+  if(action === 'png'){
+    const el = document.getElementById(btn.dataset.target);
+    const scale = PX_W / el.offsetWidth;
+    html2canvas(el, {scale: scale, backgroundColor:null}).then(canvas=>{
+      const link = document.createElement('a');
+      link.download = `${btn.dataset.name.replace(/\s+/g,'-').toLowerCase()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  }
+
+  if(action === 'print'){
+    const front = document.getElementById(btn.dataset.front).outerHTML;
+    const back = document.getElementById(btn.dataset.back).outerHTML;
+    const styles = document.querySelector('style').outerHTML;
+    const fontLink = document.querySelector('link[href*="fonts.googleapis"]').outerHTML;
+    const w = window.open('', '_blank');
+    w.document.write(`
+      <!DOCTYPE html><html><head><meta charset="UTF-8">${fontLink}${styles}
+      <style>
+        @page{ size:88mm 55mm; margin:0; }
+        body{ margin:0; padding:0; }
+        .biz-card{ box-shadow:none; border-radius:0; page-break-after:always; }
+      </style></head>
+      <body>${front}${back}</body></html>
+    `);
+    w.document.close();
+    w.onload = () => setTimeout(()=>{ w.focus(); w.print(); }, 400);
+  }
+});
+</script>
+</body>
+</html>
